@@ -41,7 +41,7 @@ public class QuoteController : ControllerBase
         return await _quoteservices.DeleteQuote(id);
     }
     [HttpGet("GetAllQuotesByCategory")]
-    public async Task<string> GetAllQuotesByCategory(int id)
+    public async Task<List<Quote>> GetAllQuotesByCategory(int id)
     {
         return await _quoteservices.GetAllQuotesByCategory(id);
     }

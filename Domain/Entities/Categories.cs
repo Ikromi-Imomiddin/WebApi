@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class Categories
+public class Categoriy
 {
     public int Id { get; set; }
     public string? CategoruName { get; set; }
