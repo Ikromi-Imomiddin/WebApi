@@ -7,15 +7,16 @@ public class QouteServices
     private string _connectionString;
     public QouteServices()
     {
-        _connectionString = "Server=127.0.0.1;Port=5432;Database=WebApi;User Id=postgres;Password=Ikromi8008;";
+        _connectionString = "Server=127.0.0.1;Port=5432;Database=Quotedb;User Id=postgres;Password=Ikromi8008;";
     }
 
     public async Task<List<Quote>> GetQuotes()
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
         {
-            var response = await connection.QueryAsync<Quote>($"select * from Quote ;");
-            return response.ToList();
+            var sql = "select * from Quote ;";
+            var result = await connection.QueryAsync<Quote>(sql);
+            return result.ToList();
         }
     }
 
@@ -23,7 +24,7 @@ public class QouteServices
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
         {
-            var response = await connection.QueryAsync<QuoteWithCategoryDto>($"SELECT q.id,q.quotetext,q.author,c.categoryname FROM Categories as c INNER JOIN Quote as q ON q.Categoryid = c.id;");
+            var response = await connection.QueryAsync<QuoteWithCategoryDto>($"SELECT q.id,q.quotetext,q.author,c.categoruname FROM Categories as c INNER JOIN Quote as q ON q.Categoryid = c.id;");
             return response.ToList();
         }
     }
@@ -94,7 +95,7 @@ public class QouteServices
         using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
 
         {
-            string sql = ($"select * from Quote where CategoryId ={id} ;");
+            string sql = ($"select * from Quotedb where CategoryId ={id} ;");
             try
             {
 
@@ -113,7 +114,7 @@ public class QouteServices
     {
         using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
         {
-            string sql = ($"select * from Quote order by random() Limit 1 ;");
+            string sql = ($"select * from Quotedb order by random() Limit 1 ;");
             try
             {
 
