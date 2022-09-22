@@ -1,18 +1,18 @@
 using Dapper;
-using Npgsql;
 using Domain;
+using Infrastructure.DataContext;
 namespace Services;
 public class QouteServices
 {
-    private string _connectionString;
-    public QouteServices()
+    private DataContext _datacontext;
+    public QouteServices(DataContext context)
     {
-        _connectionString = "Server=127.0.0.1;Port=5432;Database=NextTryWebApi;User Id=postgres;Password=Ikromi8008;";
-    }
+        _datacontext = context;
+    } 
 
     public async Task<List<Quote>> GetQuotes()
     {
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+       await using var connection = _datacontext.CreateConnection();
         {
             var sql = "select * from Quote ;";
             var result = await connection.QueryAsync<Quote>(sql);
@@ -22,7 +22,7 @@ public class QouteServices
 
      public async Task<List<QuoteWithCategoryDto>> GetQuotesWithCategoryName(int CategoryId)
     {
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+        await using var connection = _datacontext.CreateConnection();
         {
             var sql ="SELECT q.id,q.quotetext,q.author,c.categoryname FROM Category as c INNER JOIN Quote as q ON q.Categoryid = c.id;";
             var result = await connection.QueryAsync<QuoteWithCategoryDto>(sql);
@@ -34,7 +34,7 @@ public class QouteServices
     public async Task<string> AddQuote(Quote quote)
     {
 
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+        await using var connection = _datacontext.CreateConnection();
             try
 
             {
@@ -55,7 +55,7 @@ public class QouteServices
     public async Task<string> DeleteQuote(int id)
     {
 
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+       await using var connection = _datacontext.CreateConnection();
         {
             string sql = $"delete from Quote where Id = '{id}';";
             try
@@ -75,7 +75,7 @@ public class QouteServices
     public async Task<string> UpdateQuote(Quote quote)
     {
 
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+       await using var connection = _datacontext.CreateConnection();
         {
             string sql = $"UPDATE Quote SET Author = '{quote.Author}', CategoryId = '{quote.CategoryId}' WHERE Id = {quote.Id};";
             try
@@ -93,8 +93,7 @@ public class QouteServices
     }
     public async Task<List<Quote>> GetAllQuotesByCategory(int id)
     {
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-
+        await using var connection = _datacontext.CreateConnection();
         {
             string sql = ($"select * from Quote where CategoryId = {id} ;");
             try
@@ -113,7 +112,7 @@ public class QouteServices
 
     public async Task<string> GetRandom(int id)
     {
-        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+        await using var connection = _datacontext.CreateConnection();
         {
             string sql = ($"select * from Quote order by random() Limit 1 ;");
             try

@@ -7,10 +7,11 @@ using Domain;
 public class QuoteController : ControllerBase
 {
     private QouteServices _quoteservices;
-    public QuoteController()
+    public QuoteController(QouteServices quoteService)
     {
-        _quoteservices = new QouteServices();
+        _quoteservices = quoteService;
     }
+
     [HttpGet("GetQuotes")]
     public async Task<List<Quote>> GetQuotes()
     {
